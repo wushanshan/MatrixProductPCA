@@ -12,7 +12,7 @@ Current version: July 1, 2016 (More updates are expected soon.)
 [LELA]: https://arxiv.org/abs/1410.3886
 
 ## How to run?
-There are two ways to run in Spark: use `spark-shell` or `spark-submit`.
+There are two ways to run in Spark: `spark-shell` or `spark-submit`.
 
 ### spark-shell
 Launch the spark-shell (make sure you have [configured Spark][sparkConfig] properly), and then copy and paste our source code in the terminal.
