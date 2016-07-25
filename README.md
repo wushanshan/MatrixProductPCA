@@ -28,7 +28,7 @@ For example, the following scripts will run spark locally on 2 cores with memory
 ```$bin/spark-submit --class "OnePassPCA" --master local[2] --driver-memory 2g onepasspca_2.10-1.0.jar 2000 2000 5 2 1000 10 0 4```
 
 ## Ongoing work
-We are currently trying to speed up the current implementation of `OnePassPCA`, under the setting of large dense matrices and large sketch sizes.
+We are currently trying to speed up the Spark implementation of `OnePassPCA`, particularly for large dense matrices and large sketch sizes.
 
 * Replacing the standard JL (Gaussian matrix) by fast JL techniques (Hadamard sketch) could potentially reduce the time required for sketching. 
 * Instead of collecting the sketched matrix RDD into the driver node and computing the samples locally, a better way may be to transpose the sketched matrix RDD (this involves global shuffling) and then compute the sampled values distributely.  
