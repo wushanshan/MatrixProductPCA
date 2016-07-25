@@ -7,7 +7,7 @@ We provide two Spark implementations for the following problem: let `A` and `B` 
 
 The two-pass `LELA` is proposed by S. Bhojanapalli et al. in their paper [Tighter low-rank approximation via sampling the leveraged elements][LELA].
 
-Current version: June 1, 2016 (More updates are expected soon.)
+Current version: July 1, 2016 (More updates are expected soon.)
 
 [LELA]: https://arxiv.org/abs/1410.3886
 
