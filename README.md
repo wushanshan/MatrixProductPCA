@@ -22,7 +22,7 @@ We now present simulation results on a synthetic example:
 | OnePassPCA |  0.0280   |  10mins  |
 
 
--> <img src="/images/runtime-3.png" width="450"> <-
+     <img src="/images/runtime-3.png" width="450"> 
 
 
 ## How to run?
