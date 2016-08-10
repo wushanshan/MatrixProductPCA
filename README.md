@@ -5,7 +5,7 @@ We consider the following problem: let `A` and `B` be two matrices of size d-by-
 
 For this problem we present Spark implementations for two pass-efficient algorithms: `LELA` and `OnePassPCA`. Both algorithms requires approximately O(nrlogn) storage. `LELA` is a two-pass algorithm, proposed by S. Bhojanapalli et al. in their paper [Tighter low-rank approximation via sampling the leveraged elements][LELA]. `OnePassPCA`, as its name suggests, is a one-pass algorithm, and hence can be used when the matrices are coming from live data streams. The directory follows a typical layout: the source file is located under `/src/main/scala`
 
-Note that: 1) For ease of computation, `A` and `B` are stored as a single RDD[index,(blockMatrixOfA, blockMatrixOfB)]. The RDDs are stored slightly differently: `LELA` stores row blocks while `OnePassPCA` stores column blocks. 2) [SRHT][srht] is implemented as the sketching step in `OnePassPCA`. It requires O(ndlogd) complexity, independent of the sketching size.
+_Note that_: 1) For ease of computation, `A` and `B` are stored as a single RDD[index,(blockMatrixOfA, blockMatrixOfB)]. The RDDs are stored slightly differently: `LELA` stores row blocks while `OnePassPCA` stores column blocks. 2) [SRHT][srht] is implemented as the sketching step in `OnePassPCA`. It requires O(ndlogd) complexity, independent of the sketching size.
 
 Current version: Aug 10, 2016.
 
@@ -13,11 +13,11 @@ Current version: Aug 10, 2016.
 [srht]: https://arxiv.org/abs/1011.1595
 
 ## Synthetic experiments
-We now present simulation results on a synthetic example: let n=d=100000, r=5, the matrices `A` and `B` are generated as `GD`, where `G` has entries independently drawn from standard Gaussian distribution and `D` is a diagonal matrix with D_ii = 1/i. 
+We now present simulation results on a 150GB synthetic example: let n=d=100000, r=5, the matrices `A` and `B` are generated as `GD`, where `G` has entries independently drawn from standard Gaussian distribution and `D` is a diagonal matrix with D_ii = 1/i. Other parameters are set as m = nrlogn, r = 5, k = 10, and T = 10. 
 
-|    Methods |  Accuracy |  Runtime[^2] |
+|    Methods |  Accuracy |  Runtime |
 |----------- |-----------|----------|
-| Exact SVD[^1] |  0.0271   | > 5 hrs  |
+|  Exact SVD |  0.0271   | > 5 hrs  |
 |    LELA    |  0.0274   |  14mins  |
 | OnePassPCA |  0.0280   |  10mins  |
 
