@@ -13,16 +13,18 @@ Current version: Aug 10, 2016.
 [srht]: https://arxiv.org/abs/1011.1595
 
 ## Synthetic experiments
-We now present simulation results on a synthetic example: 
+We now present simulation results on a synthetic example: let n=d=100000, r=5, the matrices `A` and `B` are generated as `GD`, where `G` has entries independently drawn from standard Gaussian distribution and `D` is a diagonal matrix with D_ii = 1/i. 
 
-|    Methods |  Accuracy |  Runtime |
+|    Methods |  Accuracy |  Runtime[^2] |
 |----------- |-----------|----------|
-|  Exact SVD |  0.0271   | > 5 hrs  |
+| Exact SVD[^1] |  0.0271   | > 5 hrs  |
 |    LELA    |  0.0274   |  14mins  |
 | OnePassPCA |  0.0280   |  10mins  |
 
+[^1]:werwe
+[^2]:werwe
 
-     <img src="/images/runtime-3.png" width="450"> 
+<img src="/images/runtime-3.png" width="450"> 
 
 
 ## How to run?
