@@ -1,17 +1,16 @@
 # MatrixProductPCA
 
 ## Overview
-We consider the following problem: let `A` and `B` be two matrices of size d-by-n (assumed too large to fit in main memory), the goal is to find a rank-r approximation of their product A^TB using a few passes over the data. A naive way is to compute A^TB first, and then perform truncated SVD. This algorithm needs O(n^2 d) time and O(n^2) memory to compute the product, followed by an SVD of the n-by-n matrix. An alternative option is to directly run power method without explicitly computing the product. Such an algorithm will need to access the data matrices O(r) times and potentially incur a huge disk IO overhead.
+We consider the following problem: let `A` and `B` be two matrices of size d-by-n (assumed too large to fit in main memory), the goal is to find a rank-r approximation of their product A^TB using a few passes over the data. A naive way is to compute A^TB first, and then perform truncated SVD. This algorithm suffers from O(n^2 d) time and O(n^2) memory and is hard to scale in the large-scale setting. An alternative option is to directly run power method without explicitly computing the product. Such an algorithm will need to access the data matrices O(r) times and potentially incur a huge disk IO overhead.
 
 For this problem we present Spark implementations for two pass-efficient algorithms: `LELA` and `OnePassPCA`. Both algorithms requires approximately O(nrlogn) storage. `LELA` is a two-pass algorithm, proposed by S. Bhojanapalli et al. in their paper [Tighter low-rank approximation via sampling the leveraged elements][LELA]. `OnePassPCA`, as its name suggests, is a one-pass algorithm, and hence can be used when the matrices are coming from live data streams. The directory follows a typical layout: the source file is located under `/src/main/scala`
 
-`LELA` is a two-pass algorithm, proposed by S. Bhojanapalli et al. in their paper [Tighter low-rank approximation via sampling the leveraged elements][LELA]. `OnePassPCA`, as its name suggests, is a one-pass algorithm, and hence can be used when the matrices are coming from live data streams. 
+Note that: 1) For ease of computation, `A` and `B` are stored as a single RDD[index,(blockMatrixOfA, blockMatrixOfB)], and the RDDs are stored slightly differently: `LELA` stores row blocks while `OnePassPCA` stores column blocks. 2) [SRHT][srht] is implemented as the sketching step in `OnePassPCA`. It requires O(ndlogd) complexity, independent of the sketching size.
 
-Note that: 1. 
-
-Current version: Aug 10, 2016 (More updates are coming soon.)
+Current version: Aug 10, 2016.
 
 [LELA]: https://arxiv.org/abs/1410.3886
+[srht]: https://arxiv.org/abs/1011.1595
 
 ## Synthetic experiments
 
