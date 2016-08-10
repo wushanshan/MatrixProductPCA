@@ -1,7 +1,7 @@
 # MatrixProductPCA
 
 ## Overview
-We consider the following problem: let `A` and `B` be two matrices of size $$d$$-by-$$n$$ (assumed too large to fit in main memory), the goal is to find a rank-r approximation of their product A^TB using a few passes over the data. a naive way is to compute AT B first, and then perform truncated singular value decomposition (SVD) of AT B. This algorithm needs O(n2d) time and O(n2) memory to compute the product, followed by an SVD of the n ⇥ n matrix. An alternative option is to directly run power method on AT B without explicitly computing the product. Such an algorithm will need to access the data matrices A and B multiple times and the disk IO overhead for loading the matrices to memory multiple times will be the major performance bottleneck.
+We consider the following problem: let `A` and `B` be two matrices of size \[d\]-by-\[n\] (assumed too large to fit in main memory), the goal is to find a rank-r approximation of their product A^TB using a few passes over the data. a naive way is to compute AT B first, and then perform truncated singular value decomposition (SVD) of AT B. This algorithm needs O(n2d) time and O(n2) memory to compute the product, followed by an SVD of the n ⇥ n matrix. An alternative option is to directly run power method on AT B without explicitly computing the product. Such an algorithm will need to access the data matrices A and B multiple times and the disk IO overhead for loading the matrices to memory multiple times will be the major performance bottleneck.
 
 For this problem we present Spark implementations for two pass-efficient algorithms: `LELA` and `OnePassPCA`. The directory follows a typical layout: the source file is located under `/src/main/scala`
 
