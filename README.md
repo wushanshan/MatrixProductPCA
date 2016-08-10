@@ -27,6 +27,10 @@ For example, the following scripts will run spark locally on 2 cores with memory
 
 ```$bin/spark-submit --class "OnePassPCA" --master local[2] --driver-memory 2g onepasspca_2.10-1.0.jar 2000 2000 5 2 1000 10 0 4```
 
+## Synthetic experiments
+
+![alt text](/images/runtime-OneTwo.png "Title")
+
 ## Ongoing work
 We are currently trying to speed up the Spark implementation of `OnePassPCA`, particularly for large dense matrices and large sketch sizes.
 
