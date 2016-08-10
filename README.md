@@ -13,7 +13,7 @@ Current version: Aug 10, 2016.
 [srht]: https://arxiv.org/abs/1011.1595
 
 ## Synthetic experiments
-We now present simulation results on a 150GB synthetic example: let n=d=100000, r=5, the matrices `A` and `B` are generated as `GD`, where `G` has entries independently drawn from standard Gaussian distribution and `D` is a diagonal matrix with D_ii = 1/i. Other parameters are set as m = nrlogn, r = 5, k = 10, and T = 10. 
+We now present simulation results on a 150GB synthetic example: let n=d=100000, r=5, the matrices `A` and `B` are generated as `GD`, where `G` has entries independently drawn from standard Gaussian distribution and `D` is a diagonal matrix with D_ii = 1/i. Other parameters are set as #samples = 2nrlogn, sketching size = 2000, and #ALS iteratios = 10. 
 
 |    Methods |  Accuracy |  Runtime |
 |----------- |-----------|----------|
@@ -21,8 +21,10 @@ We now present simulation results on a 150GB synthetic example: let n=d=100000, 
 |    LELA    |  0.0274   |  14mins  |
 | OnePassPCA |  0.0280   |  10mins  |
 
-[^1]:werwe
-[^2]:werwe
+__Note__: 1) The runtime is recorded by running Spark-1.6.2 on a multi-core machine (Intel Xeon CPU E5-2699) locally. We configure Spark to use 40 cores and 120GB memory. 2) Here `Exact SVD` uses power method: first compute B^TAA^TBv distributedly and send it to ARPACK's dsaupd to compute the top eigenvalues and eigenvectors. The code is adapted from Spark's private object [EigenValueDecomposition][SVD].
+
+[SVD]:https://github.com/apache/spark/blob/master/mllib/src/main/scala/org/apache/spark/mllib/linalg/EigenValueDecomposition.scala
+
 
 <img src="/images/runtime-3.png" width="450"> 
 
