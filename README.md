@@ -5,7 +5,7 @@ We consider the following problem: let `A` and `B` be two matrices of size d-by-
 
 For this problem we present Spark implementations for two pass-efficient algorithms: `LELA` and `OnePassPCA`. Both algorithms requires approximately O(nrlogn) storage. `LELA` is a two-pass algorithm, proposed by S. Bhojanapalli et al. in their paper [Tighter low-rank approximation via sampling the leveraged elements][LELA]. `OnePassPCA`, as its name suggests, is a one-pass algorithm, and hence can be used when the matrices are coming from live data streams. The directory follows a typical layout: the source file is located under `/src/main/scala`
 
-_Note that_: 1) For ease of computation, `A` and `B` are stored as a single RDD[index,(blockMatrixOfA, blockMatrixOfB)]. The RDDs are stored slightly differently: `LELA` stores row blocks while `OnePassPCA` stores column blocks. 2) [SRHT][srht] is implemented as the sketching step in `OnePassPCA`. It requires O(ndlogd) complexity, independent of the sketching size.
+__Note__: 1) For ease of computation, `A` and `B` are stored as a single RDD[index,(blockMatrixOfA, blockMatrixOfB)]. The RDDs are stored slightly differently: `LELA` stores row blocks while `OnePassPCA` stores column blocks. 2) [SRHT][srht] is implemented as the sketching step in `OnePassPCA`. It requires O(ndlogd) complexity, independent of the sketching size.
 
 Current version: Aug 10, 2016.
 
