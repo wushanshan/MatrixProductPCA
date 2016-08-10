@@ -30,6 +30,7 @@ For example, the following scripts will run spark locally on 2 cores with memory
 ## Synthetic experiments
 
 ![alt text](/images/runtime-OneTwo.png "Title")
+<img src="/images/runtime-OneTwo.png" width="48">
 
 ## Ongoing work
 We are currently trying to speed up the Spark implementation of `OnePassPCA`, particularly for large dense matrices and large sketch sizes.
