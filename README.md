@@ -13,6 +13,14 @@ Current version: Aug 10, 2016.
 [srht]: https://arxiv.org/abs/1011.1595
 
 ## Synthetic experiments
+We now present simulation results on a synthetic example: 
+
+|    Methods |  Accuracy |  Runtime |
+|----------- |-----------|----------|
+|  Exact SVD |  0.0271   | > 5 hrs  |
+|    LELA    |  0.0274   |  14mins  |
+| OnePassPCA |  0.0280   |  10mins  |
+
 
 <img src="/images/runtime-3.png" width="450">
 
