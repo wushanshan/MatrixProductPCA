@@ -1,15 +1,22 @@
 # MatrixProductPCA
 
 ## Overview
-We provide two Spark implementations for the following problem: let `A` and `B` be two matrices of size d-by-n (assumed too large to fit in main memory), the goal is to find a rank-r approximation of their product A^TB in a pass-efficient way.
+We consider the following problem: let `A` and `B` be two matrices of size $$d$$-by-$$n$$ (assumed too large to fit in main memory), the goal is to find a rank-r approximation of their product A^TB using a few passes over the data. a naive way is to compute AT B first, and then perform truncated singular value decomposition (SVD) of AT B. This algorithm needs O(n2d) time and O(n2) memory to compute the product, followed by an SVD of the n ⇥ n matrix. An alternative option is to directly run power method on AT B without explicitly computing the product. Such an algorithm will need to access the data matrices A and B multiple times and the disk IO overhead for loading the matrices to memory multiple times will be the major performance bottleneck.
 
-`LELA` is a two-pass algorithm, while `OnePassPCA` is a one-pass algorithm. The directory follows a typical layout: source file is located under `/src/main/scala`
+For this problem we present Spark implementations for two pass-efficient algorithms: `LELA` and `OnePassPCA`. The directory follows a typical layout: the source file is located under `/src/main/scala`
 
-The two-pass `LELA` is proposed by S. Bhojanapalli et al. in their paper [Tighter low-rank approximation via sampling the leveraged elements][LELA].
+`LELA` is a two-pass algorithm, proposed by S. Bhojanapalli et al. in their paper [Tighter low-rank approximation via sampling the leveraged elements][LELA]. `OnePassPCA`, as its name suggests, is a one-pass algorithm, and hence can be used when the matrices are coming from live data streams. 
 
-Current version: July 1, 2016 (More updates are coming soon.)
+Note that: 1. 
+
+Current version: Aug 10, 2016 (More updates are coming soon.)
 
 [LELA]: https://arxiv.org/abs/1410.3886
+
+## Synthetic experiments
+
+<img src="/images/runtime-3.png" width="450">
+
 
 ## How to run?
 There are two ways to run in Spark: `spark-shell` or `spark-submit`.
@@ -27,9 +34,6 @@ For example, the following scripts will run spark locally on 2 cores with memory
 
 ```$bin/spark-submit --class "OnePassPCA" --master local[2] --driver-memory 2g onepasspca_2.10-1.0.jar 2000 2000 5 2 1000 10 0 4```
 
-## Synthetic experiments
-
-<img src="/images/runtime-3.png" width="450">
 
 ## Ongoing work
 We are currently trying to speed up the Spark implementation of `OnePassPCA`, particularly for large dense matrices and large sketch sizes.
