@@ -25,9 +25,11 @@ __Note__: 1) The runtime is recorded by running Spark-1.6.2 on a multi-core mach
 
 [SVD]:https://github.com/apache/spark/blob/master/mllib/src/main/scala/org/apache/spark/mllib/linalg/EigenValueDecomposition.scala
 
+We now compare the running time of LELA and OnePassLELA on Amazon EC2. The following figure illustrates the runtime breakdown on clusters with 2, 5, and 10 nodes. Each node is an [m3.2xlarge][aws] instance. We see that the speedup achieved by OnePassPCA is more prominent when the clusters are small (1.6x at 2 nodes). 
 
 <img src="/images/runtime-3.png" width="450"> 
 
+[aws]:https://aws.amazon.com/ec2/pricing/
 
 ## How to run?
 There are two ways to run in Spark: `spark-shell` or `spark-submit`.
