@@ -23,7 +23,7 @@ We run Spark-1.6.2 on a Amazon EC2 cluster with two [m3.2xlarge][aws] instances.
 |    LELA    |  0.0274   |  56mins  |
 | OnePassPCA |  0.0280   |  34mins  |
 
-__Note__: 1) For `Exact SVD`, we adapt the source code of private object [EigenValueDecomposition][SVD] for our setting: compute B^TAA^TBv distributedly and send it to ARPACK's dsaupd to compute the top eigenvalues and eigenvectors. 2)  Sometimes we will encounter the error `"Remote RPC client disassociated"`. The exact cause is still unknown.
+__Note__: 1) For `Exact SVD`, we adapt the source code of private object [EigenValueDecomposition][SVD] for our setting: compute B^TAA^TBv distributedly and send it to ARPACK's dsaupd to compute the top eigenvalues and eigenvectors. We set tol=1e-5 as the convergence tolerance. 2)  Sometimes we will encounter the error `"Remote RPC client disassociated"`. The exact cause is still unknown.
 
 [SVD]:https://github.com/apache/spark/blob/master/mllib/src/main/scala/org/apache/spark/mllib/linalg/EigenValueDecomposition.scala
 
