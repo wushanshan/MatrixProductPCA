@@ -15,31 +15,34 @@ Current version: Aug 10, 2016.
 ## Synthetic experiments
 We now present simulation results on a 150GB synthetic example: let n=d=100000, r=5, the matrices `A` and `B` are generated as `GD`, where `G` has entries independently drawn from standard Gaussian distribution and `D` is a diagonal matrix with D_ii = 1/i. Other parameters are set as #samples = 2nrlogn, sketching size = 2000, and #ALS iteratios = 10. 
 
+We run Spark-2.0.0 locally on a multi-core machine (Intel Xeon CPU E5-2699) and configure Spark to use 40 cores and 100GB memory. The results are shown in the following table. 
+
 |    Methods |  Accuracy |  Runtime |
 |----------- |-----------|----------|
 |  Exact SVD |  0.0271   | > 5 hrs  |
 |    LELA    |  0.0274   |  14mins  |
 | OnePassPCA |  0.0280   |  10mins  |
 
-__Note__: 1) The runtime is recorded by running Spark-1.6.2 on a multi-core machine (Intel Xeon CPU E5-2699) locally. We configure Spark to use 40 cores and 120GB memory. 2) Here `Exact SVD` uses power method: first compute B^TAA^TBv distributedly and send it to ARPACK's dsaupd to compute the top eigenvalues and eigenvectors. The code is adapted from Spark's private object [EigenValueDecomposition][SVD].
+__Note__: For `Exact SVD`, we adapt the power method used in Spark's private object [EigenValueDecomposition][SVD]: first compute B^TAA^TBv distributedly and send it to ARPACK's dsaupd to compute the top eigenvalues and eigenvectors. 
 
 [SVD]:https://github.com/apache/spark/blob/master/mllib/src/main/scala/org/apache/spark/mllib/linalg/EigenValueDecomposition.scala
 
-We now compare the running time of LELA and OnePassLELA on Amazon EC2. The following figure illustrates the runtime breakdown on clusters with 2, 5, and 10 nodes. Each node is an [m3.2xlarge][aws] instance. We see that the speedup achieved by OnePassPCA is more prominent when the clusters are small (1.6x at 2 nodes). 
+We now compare the running time of LELA and OnePassLELA on Amazon EC2. We use the [spark-ec2][ec2] script to lauch clusters. The following figure illustrates the runtime breakdown on clusters of 2, 5, and 10 nodes. Each node is an [m3.2xlarge][aws] instance. We see that the speedup achieved by OnePassPCA is more prominent for small clusters (likely due to the increasing spark overheads at larger clusters). 
 
 <img src="/images/runtime-3.png" width="450"> 
 
 [aws]:https://aws.amazon.com/ec2/pricing/
+[ec2]:http://spark.apache.org/docs/1.6.2/ec2-scripts.html
 
-## How to run?
-There are two ways to run in Spark: `spark-shell` or `spark-submit`.
+## How to run our code?
+There are two ways to run in Spark: `spark-shell` or `spark-submit`. We recommend to use `spark-shell` for debugging.
 
 ### spark-shell
-Launch the spark-shell (make sure you have [configured Spark][sparkConfig] properly), and then copy and paste our source code in the terminal.
+Launch the spark-shell (make sure your Spark is [configured][sparkConfig] properly), and then copy and paste our source code in the terminal.
 [sparkConfig]: http://spark.apache.org/docs/latest/configuration.html
 
 ### spark-submit
-First, build the JAR packge using `sbt package`. The generated JAR package is located under `/target/scala-2.10` Then copy the JAR pacakge to YOU_SPARK_HOME, and run application using spark-submit.
+Build the JAR packge using `sbt package`. The generated JAR package is located under `/target/scala-2.10` Then copy the JAR pacakge to YOU_SPARK_HOME, and run application using spark-submit.
 
 For example, the following scripts will run spark locally on 2 cores with memory 2g, with parameters #colns=5000, #rows=5000, rank=5, partitions=2, k=1000, #samples=4nrlogn. 
 
