@@ -19,9 +19,9 @@ Current version: Aug 10, 2016.
 ## Synthetic experiments
 We now present simulation results on a 150GB synthetic example: let n=d=100000, r=5, the matrices `A` and `B` are generated as `DG`, where `G` has entries independently drawn from standard Gaussian distribution and `D` is a diagonal matrix with D_ii = 1/i. Other parameters are set as #RDD partitions=80, #samples = 2nrlogn, sketching size = 2000, and #ALS iterations = 10. 
 
-We run Spark-1.6.2 on a Amazon EC2 cluster with two [m3.2xlarge][aws] instances. We use the [spark-ec2][ec2] script to lauch clusters. The results are shown in the following table. 
+We run Spark-1.6.2 on an Amazon EC2 cluster with two [m3.2xlarge][aws] instances. We use the [spark-ec2][ec2] script to lauch clusters. The results are shown in the following table. The `Error` is measured by relative spectral norm error: ||A^TB- UV^T||/||A^TB||.  
 
-|    Methods |  Accuracy |  Runtime |
+|    Methods |  Error    |  Runtime |
 |----------- |-----------|----------|
 |  Exact SVD |  0.0271   |  23 hrs  |
 |    LELA    |  0.0274   |  56mins  |
@@ -31,7 +31,7 @@ __Note__: 1) For `Exact SVD`, we adapt the source code of private object [EigenV
 
 [SVD]:https://github.com/apache/spark/blob/master/mllib/src/main/scala/org/apache/spark/mllib/linalg/EigenValueDecomposition.scala
 
-The following figure illustrates the runtime breakdown on clusters of 2, 5, and 10 nodes. Each node is an [m3.2xlarge][aws] instance. We see that the speedup achieved by OnePassPCA is more prominent for small clusters (likely due to the increasing spark overheads at larger clusters, see [this paper][ov] for more explanation on spark overheads). 
+The following figure illustrates the runtime breakdown on clusters of 2, 5, and 10 nodes. Each node is an [m3.2xlarge][aws] instance. We see that the speedup achieved by OnePassPCA is more prominent for small clusters (possibly due to the increasing spark overheads at larger clusters, see [this paper][ov] for more explanation on spark overheads). 
 
 <img src="/images/runtime-3.png" width="450"> 
 
@@ -56,4 +56,4 @@ For example, the following scripts will run spark locally on 2 cores with memory
 ```$bin/spark-submit --class "OnePassPCA" --master local[2] --driver-memory 2g onepasspca_2.10-1.0.jar 5000 5000 5 2 1000 10 0 2```
 
 ## Matlab implementation
-We also provide Matlab code for the two algorithms. Note that the provided Matlab code uses standard JL (Gaussian matrix) for the sketching step, while the Spark implementation incorporates Hadamard sketch ([SRHT][srht]) which runs faster.
+We also provide Matlab code for the two algorithms. Note that the provided Matlab code uses standard JL (Gaussian matrix) for the sketching step, while our Spark code implementes Hadamard sketch ([SRHT][srht]) which runs faster.
