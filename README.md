@@ -19,7 +19,7 @@ We run Spark-1.6.2 on a Amazon EC2 cluster with two [m3.2xlarge][aws] instances.
 
 |    Methods |  Accuracy |  Runtime |
 |----------- |-----------|----------|
-|  Exact SVD |  0.0271   | > 5 hrs  |
+|  Exact SVD |  0.0271   |  23 hrs  |
 |    LELA    |  0.0274   |  56mins  |
 | OnePassPCA |  0.0280   |  34mins  |
 
