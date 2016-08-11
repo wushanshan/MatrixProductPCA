@@ -7,7 +7,7 @@ For this problem we present Spark implementations for two pass-efficient algorit
 
 The following are two flow diagrams of `LELA` (upper) and `OnePassPCA` (lower).
 
-<img src="/images/Flow_diagram.png" width="650"> 
+<img src="/images/flow-diagram.png" width="650"> 
 
 __Note__: 1) For ease of computation, `A` and `B` are stored as a single RDD[index,(blockMatrixOfA, blockMatrixOfB)]. The RDDs are stored slightly differently: `LELA` stores row blocks while `OnePassPCA` stores column blocks. 2) [SRHT][srht] is implemented as the sketching step in `OnePassPCA`. It requires O(ndlogd) complexity, independent of the sketching size.
 
