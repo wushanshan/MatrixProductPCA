@@ -69,12 +69,12 @@ object LELA_ATB {
   }
   
   /*
-   *  The following function computes matrix vector multiplication for A^TB.
-   *  It outputs B^TAA^TBv, and we will use it to get the spectral norm of A^TB.
-   *  Note that this function is slightly different from that in OnePassPCA 
-   *  because of the different ways that A and B are stored.
+   * The following functions compute matrix vector multiplications for A^TB and B^TB.
+   * We will use them to compute the spectral norms.
+   * Note that this function is slightly different from that in OnePassPCA 
+   * because of the different ways that A and B are stored.
    */
-  def matVecMulti(rawData: RDD[(Int, (BDM[Double], BDM[Double]))], v: BDV[Double], n: Int, d: Int, sc: org.apache.spark.SparkContext):BDV[Double] = {
+  def AtBv(rawData: RDD[(Int, (BDM[Double], BDM[Double]))], v: BDV[Double], n: Int, d: Int, sc: org.apache.spark.SparkContext):BDV[Double] = {
       val vBC = sc.broadcast(v)
       val vtB = rawData.treeAggregate(BDV.zeros[Double](d))(
         (acc, value) => {
@@ -85,41 +85,45 @@ object LELA_ATB {
           acc},
         (acc1, acc2) => acc1+acc2
       )
-      val vtBCC = sc.broadcast(vtB)
+      val vtBBC = sc.broadcast(vtB)
       val AtBv = rawData.treeAggregate(BDV.zeros[Double](n))(
         (acc, value) => {
           val rowIndex = value._1
           val numRow = value._2._1.rows
-          val vtA = vtBCC.value.slice(rowIndex*numRow, (rowIndex+1)*numRow).t*value._2._1
+          val vtA = vtBBC.value.slice(rowIndex*numRow, (rowIndex+1)*numRow).t*value._2._1
           brzAxpy(1.0, vtA.t, acc)
           acc},
         (acc1, acc2) => acc1+acc2
       )
-      val AtBvBC = sc.broadcast(AtBv)
-      val AAtBv = rawData.treeAggregate(BDV.zeros[Double](d))(
+      AtBv
+  }
+  
+  def BtAv(rawData: RDD[(Int, (BDM[Double], BDM[Double]))], v: BDV[Double], n: Int, d: Int, sc: org.apache.spark.SparkContext):BDV[Double] = {
+      val vBC = sc.broadcast(v)
+      val vtA = rawData.treeAggregate(BDV.zeros[Double](d))(
         (acc, value) => {
           val rowIndex = value._1
           val numRow = value._2._1.rows
-          val vtA = value._2._1*AtBvBC.value
+          val vtA = value._2._1*vBC.value
           acc(rowIndex*numRow to (rowIndex+1)*numRow-1) := vtA
           acc},
         (acc1, acc2) => acc1+acc2
       )
-      val AAtBvBC = sc.broadcast(AAtBv)
-      val BtAAtBv = rawData.treeAggregate(BDV.zeros[Double](n))(
+      val vtABC = sc.broadcast(vtA)
+      val BtAv = rawData.treeAggregate(BDV.zeros[Double](n))(
         (acc, value) => {
           val rowIndex = value._1
           val numRow = value._2._1.rows
-          val vtB = AAtBvBC.value.slice(rowIndex*numRow, (rowIndex+1)*numRow).t*value._2._2
+          val vtB = vtABC.value.slice(rowIndex*numRow, (rowIndex+1)*numRow).t*value._2._2
           brzAxpy(1.0, vtB.t, acc)
           acc},
         (acc1, acc2) => acc1+acc2
       )
-      BtAAtBv
-    }
-  
+      BtAv
+  }
+
   def main(args: Array[String]){
-    //val args = Array("5000","5000","5","5","10","0","4")
+    //val args = Array("100000","100000”,”5”,”80","10","0","2")
     val n = args(0).toInt // number of columns of A and B
     val d = args(1).toInt // number of rows of A and B
     val r = args(2).toInt // desired rank
@@ -142,7 +146,7 @@ object LELA_ATB {
      */  
     println(s"Generate two random matrices A and B...")
     val rowsPerPart = d/p // number of rows per partition
-    val alpha = 0.5
+    val alpha = 1
     val rawData = sc.parallelize(Array.range(0,p),p).map{x=> 
       val normal = breeze.stats.distributions.Gaussian(0,1)
       val BDMA = new BDM(rowsPerPart,n, normal.sample(rowsPerPart*n).toArray)
@@ -259,38 +263,39 @@ object LELA_ATB {
     
     
     /*
-     * Now we use power method to compute the spectral norm error ||UV^T-A^TB||/||A^TB||.
+     * Now we use AtBv and BtAv to compute the spectral norm error ||UV^T-A^TB||/||A^TB|| via power method
      */
     println(s"Compute the spectral norm ||A^TB||...")
     var normAB = 1.0  //first compute the spectral norm of A^TB 
-    val normal = breeze.stats.distributions.Gaussian(0,1)
-    var v1 = BDV(normal.sample(n).toArray)
+    val rand = new Random(System.currentTimeMillis)
+    var v1 = BDV(Array.fill(n)(rand.nextGaussian))
     normAB = math.sqrt(v1 dot v1)
     v1 :*= 1/normAB
     cfor(0)(i=>i<5, i=>i+1){i=>
-      v1 = matVecMulti(rawData, v1, n, d, sc)
+      v1 = AtBv(rawData, v1, n, d, sc)
+      v1 = BtAv(rawData, v1, n, d, sc)
       normAB = math.sqrt(v1 dot v1)
       println(math.sqrt(normAB))
       v1 :*= 1/normAB
     }
-    
+        
     println(s"Compute the spectral norm ||UV^T-A^TB||...")
     val userBDM2 = featuresToBDM(model2.userFeatures,n,r)
     val prodBDM2 = featuresToBDM(model2.productFeatures,n,r) 
     var diffNorm = 1.0
-    var v2 = BDV(normal.sample(n).toArray)
+    var v2 = BDV(Array.fill(n)(rand.nextGaussian))
     diffNorm = math.sqrt(v2 dot v2)
     v2 :*= 1/diffNorm
     cfor(0)(i=>i<5, i=>i+1){i=>
-      val v3 = userBDM2*(v2.t*prodBDM2).t 
-      v2 = prodBDM2*(v3.t*userBDM2).t - matVecMulti(rawData, v2, n, d, sc)
+      val v3 = userBDM2*(v2.t*prodBDM2).t - AtBv(rawData, v2, n, d, sc)
+      v2 = prodBDM2*(v3.t*userBDM2).t - BtAv(rawData, v3, n, d, sc)
       diffNorm = math.sqrt(v2 dot v2)
       println(math.sqrt(diffNorm))
       v2 :*= 1/diffNorm
     }
     val err = math.sqrt(diffNorm)/math.sqrt(normAB)
     println(s"The achieved spectral norm error is $err")
-    
+      
     sc.stop()   
     
   }
