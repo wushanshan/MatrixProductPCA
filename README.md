@@ -53,9 +53,3 @@ For example, the following scripts will run spark locally on 2 cores with memory
 
 ## Matlab implementation
 We also provide Matlab code for the two algorithms. Note that the provided Matlab code uses standard JL (Gaussian matrix) for the sketching step, while the Spark implementation incorporates Hadamard sketch ([SRHT][srht]) which runs faster.
-
-## Ongoing work
-We are currently trying to speed up the Spark implementation of `OnePassPCA`, particularly for large dense matrices and large sketch sizes.
-
-* Replacing the standard JL (Gaussian matrix) by fast JL techniques (Hadamard sketch) could potentially reduce the time required for sketching. 
-* Instead of collecting the sketched matrix RDD into the driver node and computing the samples locally, a better way may be to transpose the sketched matrix RDD (this involves global shuffling) and then compute the sampled values distributely.  
