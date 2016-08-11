@@ -15,19 +15,19 @@ Current version: Aug 10, 2016.
 ## Synthetic experiments
 We now present simulation results on a 150GB synthetic example: let n=d=100000, r=5, the matrices `A` and `B` are generated as `DG`, where `G` has entries independently drawn from standard Gaussian distribution and `D` is a diagonal matrix with D_ii = 1/i. Other parameters are set as #RDD partitions=80, #samples = 2nrlogn, sketching size = 2000, and #ALS iterations = 10. 
 
-We run Spark-2.0.0 locally on a multi-core machine (Intel Xeon CPU E5-2699) and configure Spark to use 40 cores and 100GB memory. The results are shown in the following table. 
+We run Spark-1.6.2 on a Amazon EC2 cluster with 2 [m3.2xlarge][aws] instances. We use the [spark-ec2][ec2] script to lauch clusters. The results are shown in the following table. 
 
 |    Methods |  Accuracy |  Runtime |
 |----------- |-----------|----------|
 |  Exact SVD |  0.0271   | > 5 hrs  |
-|    LELA    |  0.0274   |  14mins  |
-| OnePassPCA |  0.0280   |  10mins  |
+|    LELA    |  0.0274   |  56mins  |
+| OnePassPCA |  0.0280   |  34mins  |
 
 __Note__: For `Exact SVD`, we adapt the source code of private object [EigenValueDecomposition][SVD] for our setting: compute B^TAA^TBv distributedly and send it to ARPACK's dsaupd to compute the top eigenvalues and eigenvectors. 
 
 [SVD]:https://github.com/apache/spark/blob/master/mllib/src/main/scala/org/apache/spark/mllib/linalg/EigenValueDecomposition.scala
 
-We now compare the running time of LELA and OnePassLELA on Amazon EC2. We use the [spark-ec2][ec2] script to lauch clusters. The following figure illustrates the runtime breakdown on clusters of 2, 5, and 10 nodes. Each node is an [m3.2xlarge][aws] instance. We see that the speedup achieved by OnePassPCA is more prominent for small clusters (likely due to the increasing spark overheads at larger clusters, see [this paper][ov] for more explanation on spark overheads). 
+The following figure illustrates the runtime breakdown on clusters of 2, 5, and 10 nodes. Each node is an [m3.2xlarge][aws] instance. We see that the speedup achieved by OnePassPCA is more prominent for small clusters (likely due to the increasing spark overheads at larger clusters, see [this paper][ov] for more explanation on spark overheads). 
 
 <img src="/images/runtime-3.png" width="450"> 
 
