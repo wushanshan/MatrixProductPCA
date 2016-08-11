@@ -13,7 +13,7 @@ Current version: Aug 10, 2016.
 [srht]: https://arxiv.org/abs/1011.1595
 
 ## Synthetic experiments
-We now present simulation results on a 150GB synthetic example: let n=d=100000, r=5, the matrices `A` and `B` are generated as `GD`, where `G` has entries independently drawn from standard Gaussian distribution and `D` is a diagonal matrix with D_ii = 1/i. Other parameters are set as #RDD partitions=80, #samples = 2nrlogn, sketching size = 2000, and #ALS iterations = 10. 
+We now present simulation results on a 150GB synthetic example: let n=d=100000, r=5, the matrices `A` and `B` are generated as `DG`, where `G` has entries independently drawn from standard Gaussian distribution and `D` is a diagonal matrix with D_ii = 1/i. Other parameters are set as #RDD partitions=80, #samples = 2nrlogn, sketching size = 2000, and #ALS iterations = 10. 
 
 We run Spark-2.0.0 locally on a multi-core machine (Intel Xeon CPU E5-2699) and configure Spark to use 40 cores and 100GB memory. The results are shown in the following table. 
 
@@ -51,6 +51,8 @@ For example, the following scripts will run spark locally on 2 cores with memory
 
 ```$bin/spark-submit --class "OnePassPCA" --master local[2] --driver-memory 2g onepasspca_2.10-1.0.jar 5000 5000 5 2 1000 10 0 2```
 
+## Matlab implementation
+We also provide Matlab code for the two algorithms. Note that the provided Matlab code uses standard JL (Gaussian matrix) for the sketching step, while the Spark implementation incorporates Hadamard sketch ([SRHT][srht]) which runs faster.
 
 ## Ongoing work
 We are currently trying to speed up the Spark implementation of `OnePassPCA`, particularly for large dense matrices and large sketch sizes.
