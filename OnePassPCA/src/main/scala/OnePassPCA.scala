@@ -173,7 +173,7 @@ object OnePassPCA {
     
     /*
      * Generates two random matrices A and B of the form D*G, 
-     * where G is a random Gaussian matrix, and D is a diagonal matrix with D_ii = 1/\sqrt(i).
+     * where G is a random Gaussian matrix, and D is a diagonal matrix with D_ii = 1/i.
      * Output: rawData is an RDD[rowIndex,(blockMatrixOfA, blockMatrixOfB)], 
      * and blockMatrixOfA has dimension rowsPerPart-by-d (which is slightly different from TwoPassLELA)
      */  
