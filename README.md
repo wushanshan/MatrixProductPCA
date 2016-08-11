@@ -45,11 +45,11 @@ Launch the spark-shell (make sure your Spark is [configured][sparkConfig] proper
 ### spark-submit
 Build the JAR packge using `sbt package`. The generated JAR package is located under `/target/scala-2.10` Then copy the JAR pacakge to YOU_SPARK_HOME, and run application using spark-submit.
 
-For example, the following scripts will run spark locally on 2 cores with memory 2g, with parameters #colns=5000, #rows=5000, rank=5, partitions=2, k=1000, #samples=4nrlogn. 
+For example, the following scripts will run spark locally on 2 cores with memory 2g, with parameters #colns=5000, #rows=5000, rank=5, partitions=2, sketching size=1000, ALS iterations=10, ALS lambda=0, #samples=2nrlogn. 
 
-```$bin/spark-submit --class "LELA_ATB" --master local[2] --driver-memory 2g lela_2.10-1.0.jar 2000 2000 5 2 10 0 4```
+```$bin/spark-submit --class "LELA_ATB" --master local[2] --driver-memory 2g lela_2.10-1.0.jar 5000 5000 5 2 10 0 2```
 
-```$bin/spark-submit --class "OnePassPCA" --master local[2] --driver-memory 2g onepasspca_2.10-1.0.jar 2000 2000 5 2 1000 10 0 4```
+```$bin/spark-submit --class "OnePassPCA" --master local[2] --driver-memory 2g onepasspca_2.10-1.0.jar 5000 5000 5 2 1000 10 0 2```
 
 
 ## Ongoing work
