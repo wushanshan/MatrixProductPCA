@@ -19,7 +19,7 @@ Current version: Aug 10, 2016.
 ## Synthetic experiments
 We now present simulation results on a 150GB synthetic example: let n=d=100000, r=5, the matrices `A` and `B` are generated as `DG`, where `G` has entries independently drawn from standard Gaussian distribution and `D` is a diagonal matrix with D_ii = 1/i. Other parameters are set as #RDD partitions=80, #samples = 2nrlogn, sketching size = 2000, and #ALS iterations = 10. 
 
-We run Spark-1.6.2 on an Amazon EC2 cluster with two [m3.2xlarge][aws] instances. We use the [spark-ec2][ec2] script to lauch clusters. The results are shown in the following table. The `Error` is measured by relative spectral norm error: ||A^TB- UV^T||/||A^TB||.  
+We run Spark-1.6.2 on an Amazon EC2 cluster with two [m3.2xlarge][aws] instances. We use the [spark-ec2][ec2] script to lauch clusters. The results are shown in the following table. Here we compare the relative spectral norm error, which is calculated as ||A^TB- UV^T||/||A^TB||.  
 
 |    Methods |  Error    |  Runtime |
 |----------- |-----------|----------|
