@@ -23,19 +23,20 @@ We run Spark-2.0.0 locally on a multi-core machine (Intel Xeon CPU E5-2699) and 
 |    LELA    |  0.0274   |  14mins  |
 | OnePassPCA |  0.0280   |  10mins  |
 
-__Note__: For `Exact SVD`, we adapt the power method used in Spark's private object [EigenValueDecomposition][SVD]: first compute B^TAA^TBv distributedly and send it to ARPACK's dsaupd to compute the top eigenvalues and eigenvectors. 
+__Note__: For `Exact SVD`, we adapt the source code of private object [EigenValueDecomposition][SVD] for our setting: compute B^TAA^TBv distributedly and send it to ARPACK's dsaupd to compute the top eigenvalues and eigenvectors. 
 
 [SVD]:https://github.com/apache/spark/blob/master/mllib/src/main/scala/org/apache/spark/mllib/linalg/EigenValueDecomposition.scala
 
-We now compare the running time of LELA and OnePassLELA on Amazon EC2. We use the [spark-ec2][ec2] script to lauch clusters. The following figure illustrates the runtime breakdown on clusters of 2, 5, and 10 nodes. Each node is an [m3.2xlarge][aws] instance. We see that the speedup achieved by OnePassPCA is more prominent for small clusters (likely due to the increasing spark overheads at larger clusters). 
+We now compare the running time of LELA and OnePassLELA on Amazon EC2. We use the [spark-ec2][ec2] script to lauch clusters. The following figure illustrates the runtime breakdown on clusters of 2, 5, and 10 nodes. Each node is an [m3.2xlarge][aws] instance. We see that the speedup achieved by OnePassPCA is more prominent for small clusters (likely due to the increasing spark overheads at larger clusters, see [this paper][ov] for more explanation on spark overheads). 
 
 <img src="/images/runtime-3.png" width="450"> 
 
 [aws]:https://aws.amazon.com/ec2/pricing/
 [ec2]:http://spark.apache.org/docs/1.6.2/ec2-scripts.html
+[ov]: https://arxiv.org/abs/1607.01335
 
 ## How to run our code?
-There are two ways to run in Spark: `spark-shell` or `spark-submit`. We recommend to use `spark-shell` for debugging.
+There are two ways to run in Spark: `spark-shell` or `spark-submit`. 
 
 ### spark-shell
 Launch the spark-shell (make sure your Spark is [configured][sparkConfig] properly), and then copy and paste our source code in the terminal.
