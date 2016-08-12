@@ -33,7 +33,7 @@ __Note__: 1) For `Exact SVD`, we adapt the source code of private object [EigenV
 
 The following figure illustrates the runtime breakdown on clusters of 2, 5, and 10 nodes. Each node is an [m3.2xlarge][aws] instance. We see that the speedup achieved by OnePassPCA is more prominent for small clusters (possibly due to the increasing spark overheads at larger clusters, see [this paper][ov] for more explanation on spark overheads). 
 
-<img src="/images/runtime-3.png" width="450"> 
+<img src="/images/runtime-breakdown.png" width="450"> 
 
 [aws]:https://aws.amazon.com/ec2/pricing/
 [ec2]:http://spark.apache.org/docs/1.6.2/ec2-scripts.html
