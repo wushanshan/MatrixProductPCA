@@ -34,7 +34,9 @@ lambda = 0;
 [~,~,v] = svds(randn(n1,n2),r);
 u = zeros(n,r);
 for i = 1:Iterations
-    u = weightALS(samples,M_samples,v,ones(n1,n2),r,lambda);
+    % Instead of using ones(n1,n2) as weights (i.e., the vanilla ALS), you can also use weights = 1./p as weights. 
+    % We obeserve that they have similar performance in our simulations.
+    u = weightALS(samples,M_samples,v,ones(n1,n2),r,lambda); 
     v = weightALS(samples',M_samples',u,ones(n2,n1),r,lambda);
 end
 err_onepass = norm(M-u*v')/s(1,1);
