@@ -1,6 +1,5 @@
 function u = weightALS(samples, M_samples,v,weights,r,lambda)
-% This function implements a single iteration of the weighted alternating
-% minimization algorithm: 
+% This function implements a single iteration of the weighted alternating minimization algorithm: 
 % min_u \sum_{samples(i,j)==1} weights(i,j)(M_samples(i,j)-e_i*u*v'*e_j)^2 + lambda*||u||^2_F,
 % where "samples", "M_samples", and "weights" are n-by-n matrices;
 % "samples" is a 0/1 matrix indicating which entry is sampled;
