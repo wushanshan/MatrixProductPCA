@@ -35,7 +35,7 @@ The following figure illustrates the runtime breakdown on clusters of 2, 5, and 
 
 <img src="/images/runtime-breakdown.png" width="450"> 
 
-[aws]:https://aws.amazon.com/ec2/pricing/
+[aws]:https://aws.amazon.com/ec2/pricing/on-demand/
 [ec2]:http://spark.apache.org/docs/1.6.2/ec2-scripts.html
 [ov]: https://arxiv.org/abs/1607.01335
 
