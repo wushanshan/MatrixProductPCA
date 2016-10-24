@@ -3,7 +3,7 @@
 ## Overview
 We consider the following problem: let `A` and `B` be two matrices of size d-by-n (assumed too large to fit in main memory), the goal is to find a rank-r approximation of their product A^TB using a few passes over the data. A naive way is to compute A^TB first, and then perform truncated SVD. This algorithm suffers from O(n^2 d) time and O(n^2) memory and is hard to scale in the large-scale setting. An alternative option is to directly run power method without explicitly computing the product. This requires to access the data matrices O(r) times and potentially incur a huge disk IO overhead.
 
-For this problem we present Spark implementations for two pass-efficient algorithms: `LELA` and `OnePassPCA`. `LELA` is a two-pass algorithm, proposed by S. Bhojanapalli et al. in their paper [Tighter low-rank approximation via sampling the leveraged elements][LELA]. `OnePassPCA`, as its name suggests, is a one-pass algorithm, and hence can be used when the matrices are coming from live data streams. The directory follows a typical layout: the source file is located under `/src/main/scala`
+For this problem we present Spark implementations for two pass-efficient algorithms: `LELA` and `OnePassPCA`. `LELA` is a two-pass algorithm, proposed by S. Bhojanapalli et al. in their paper [Tighter low-rank approximation via sampling the leveraged elements][LELA]. `OnePassPCA`, as its name suggests, is a one-pass algorithm, and hence can be used when the matrices are coming from live data streams. It implements the algorithm `SMP-PCA` (which stands for Streaming Matrix Product PCA) proposed by S. Wu et al. in their paper [Single Pass PCA of Matrix Prodcuts][1passLELA]. The directory follows a typical layout: the source file is located under `/src/main/scala`
 
 Here are two flow diagrams illustrating `LELA` (upper) and `OnePassPCA` (lower).
 
@@ -15,6 +15,7 @@ Current version: Aug 10, 2016.
 
 [LELA]: https://arxiv.org/abs/1410.3886
 [srht]: https://arxiv.org/abs/1011.1595
+[1passLELA]: https://arxiv.org/abs/1610.06656
 
 ## Synthetic experiments
 We now present simulation results on a 150GB synthetic example: let n=d=100000, r=5, the matrices `A` and `B` are generated as `DG`, where `G` has entries independently drawn from standard Gaussian distribution and `D` is a diagonal matrix with D_ii = 1/i. Other parameters are set as #RDD partitions=80, #samples = 2nrlogn, sketching size = 2000, and #ALS iterations = 10. 
